@@ -13,6 +13,7 @@ module Fog
       #   return Fog::Identity.const_get(Fog.providers[provider]).new(attributes)
       # end
       # raise ArgumentError.new("#{provider} has no identity service")
+      require "fog/openstackcommon/identity_v2"
       return Fog::Identity::V2::OpenStackCommon.new(attributes)
     end
 
