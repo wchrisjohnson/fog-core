@@ -21,7 +21,7 @@ module Fog
       attributes = attributes.dup # Prevent delete from having side effects
       provider = attributes.delete(:provider).to_s.downcase.to_sym
 
-      unless providers.include?(provider)
+      unless self.providers.include?(provider)
         raise ArgumentError.new("#{provider} has no identity service")
       end
 
