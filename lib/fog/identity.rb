@@ -21,6 +21,7 @@ module Fog
 
       puts "ATTRIBUTES: #{attributes.to_yaml}"
       puts "self.providers: #{self.providers.to_yaml}"
+      puts "providers: #{providers.to_yaml}"
       puts "Fog.providers: #{Fog.providers.to_yaml}"
 
       attributes = attributes.dup # Prevent delete from having side effects
