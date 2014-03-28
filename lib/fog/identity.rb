@@ -20,15 +20,17 @@ module Fog
     def self.new(attributes)
 
       puts "ATTRIBUTES: #{attributes.to_yaml}"
+
+      attributes = attributes.dup # Prevent delete from having side effects
+      provider = attributes.delete(:provider).to_s.downcase.to_sym
+
+      puts "PROVIDER: #{provider}"
+
       puts "self.providers: #{self.providers.to_yaml}"
       puts "providers: #{providers.to_yaml}"
       puts "Fog.providers: #{Fog.providers.to_yaml}"
 
-      attributes = attributes.dup # Prevent delete from having side effects
-      provider = attributes.delete(:provider).to_s.downcase.to_sym
-      puts "PROVIDER: #{provider}"
-
-      unless self.providers.include?(provider)
+      unless providers.include?(provider)
         raise ArgumentError.new("#{provider} has no identity service")
       end
 
