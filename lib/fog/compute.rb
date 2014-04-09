@@ -9,7 +9,6 @@ module Fog
       attributes = attributes.dup # prevent delete from having side effects
       provider = attributes.delete(:provider).to_s.downcase.to_sym
 
-
       case provider
       when :gogrid
         require 'fog/go_grid/compute'
@@ -33,7 +32,7 @@ module Fog
         require 'fog/bare_metal_cloud/compute'
         Fog::Compute::BareMetalCloud.new(attributes)
       when :rackspace
-        version = attributes.delete(:version) 
+        version = attributes.delete(:version)
         version = version.to_s.downcase.to_sym unless version.nil?
         if version == :v1
           Fog::Logger.deprecation "First Gen Cloud Servers are deprecated. Please use `:version => :v2` attribute to use Next Gen Cloud Servers."
@@ -53,11 +52,18 @@ module Fog
         require 'fog/vcloud_director/compute'
         Fog::Compute::VcloudDirector.new(attributes)
       else
-        if self.providers.include?(provider)
-          require "fog/#{provider}/compute"
-          return Fog::Compute.const_get(Fog.providers[provider]).new(attributes)
+
+        unless providers.include?(provider)
+          raise ArgumentError.new("#{provider} is not a recognized compute provider")
         end
-        raise ArgumentError.new("#{provider} is not a recognized compute provider")
+
+        require "fog/#{provider}/compute"
+        begin
+          Fog::Compute.const_get(Fog.providers[provider]).new(attributes)
+        rescue
+          Fog::const_get(Fog.providers[provider]).const_get("Compute").new(attributes)
+        end
+
       end
     end
 
